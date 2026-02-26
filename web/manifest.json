@@ -1,0 +1,46 @@
+{
+  "name": "SAMS - Student Attendance Management System",
+  "short_name": "SAMS",
+  "description": "Offline-first attendance system for schools with location verification",
+  "start_url": "/web/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "https://files.catbox.moe/b0h2so.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://files.catbox.moe/b0h2so.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Sign Attendance",
+      "short_name": "Sign",
+      "description": "Quickly sign attendance",
+      "url": "/web/home.html?action=sign",
+      "icons": [{ "src": "https://files.catbox.moe/b0h2so.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Offline Mode",
+      "short_name": "Offline",
+      "description": "View offline data",
+      "url": "/web/offline.html",
+      "icons": [{ "src": "https://files.catbox.moe/b0h2so.png", "sizes": "192x192" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "lang": "en",
+  "dir": "ltr"
+}
