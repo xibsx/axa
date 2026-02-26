@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Offline Mode - SAMS</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Header -->
+        <div style="padding: var(--space-md); background: var(--bg-card); border-bottom: 1px solid var(--border);">
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <a href="home.html" class="btn btn-icon" style="border-radius: 50%;">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h2>Offline Mode</h2>
+            </div>
+        </div>
+        
+        <!-- Connection Status Banner -->
+        <div id="connectionBanner" class="offline-banner" style="margin: 10px; border-radius: 8px; display: none;">
+            <i class="fas fa-wifi-slash"></i>
+            <span id="connectionStatus">You're offline</span>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content" style="padding-bottom: 80px;">
+            
+            <!-- Quick Sync Card -->
+            <div class="card" style="background: var(--primary); color: white; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3 style="color: white; margin-bottom: 4px;">Offline Queue</h3>
+                        <p style="opacity: 0.9;" id="queueCount">2 items pending sync</p>
+                    </div>
+                    <button class="btn" style="background: white; color: var(--primary);" onclick="syncNow()" id="syncButton">
+                        <i class="fas fa-sync-alt"></i> Sync Now
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Pending Items Section -->
+            <div style="margin-bottom: 24px;">
+                <h3 style="margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-clock" style="color: var(--warning);"></i>
+                    Pending Sync
+                    <span class="badge badge-warning" id="pendingBadge">2</span>
+                </h3>
+                
+                <div id="pendingList" class="card" style="padding: 0;">
+                    <!-- Pending items will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Synced Items Section -->
+            <div style="margin-bottom: 24px;">
+                <h3 style="margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                    Recently Synced
+                </h3>
+                
+                <div id="syncedList" class="card" style="padding: 0;">
+                    <!-- Synced items will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Cached Data Stats -->
+            <div class="card" style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-database" style="color: var(--primary);"></i>
+                    Cached Data
+                </h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                    <div style="background: var(--bg-input); padding: 12px; border-radius: var(--radius); text-align: center;">
+                        <div style="font-size: 20px; font-weight: 700; color: var(--primary);" id="cachedEvents">24</div>
+                        <div style="font-size: 12px;">Events</div>
+                    </div>
+                    <div style="background: var(--bg-input); padding: 12px; border-radius: var(--radius); text-align: center;">
+                        <div style="font-size: 20px; font-weight: 700; color: var(--primary);" id="cachedAnnouncements">12</div>
+                        <div style="font-size: 12px;">Announcements</div>
+                    </div>
+                    <div style="background: var(--bg-input); padding: 12px; border-radius: var(--radius); text-align: center;">
+                        <div style="font-size: 20px; font-weight: 700; color: var(--primary);" id="cachedAttendance">156</div>
+                        <div style="font-size: 12px;">Records</div>
+                    </div>
+                    <div style="background: var(--bg-input); padding: 12px; border-radius: var(--radius); text-align: center;">
+                        <div style="font-size: 20px; font-weight: 700; color: var(--primary);" id="cacheSize">24.5</div>
+                        <div style="font-size: 12px;">MB</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-outline" style="flex: 1;" onclick="viewCachedData()">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                    <button class="btn btn-outline" style="flex: 1;" onclick="clearCachedData()">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Offline Settings -->
+            <div class="card">
+                <h3 style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-cog" style="color: var(--primary);"></i>
+                    Offline Settings
+                </h3>
+                
+                <div class="settings-item" style="padding: 12px 0;">
+                    <div class="settings-item-left">
+                        <i class="fas fa-clock settings-icon"></i>
+                        <span>Auto-sync when online</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="autoSync" onchange="toggleAutoSync()" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="settings-item" style="padding: 12px 0;">
+                    <div class="settings-item-left">
+                        <i class="fas fa-bell settings-icon"></i>
+                        <span>Offline notifications</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="offlineNotif" onchange="toggleOfflineNotif()" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="settings-item" style="padding: 12px 0; border-bottom: none;">
+                    <div class="settings-item-left">
+                        <i class="fas fa-hourglass-half settings-icon"></i>
+                        <span>Keep offline data for</span>
+                    </div>
+                    <select class="form-input" style="width: auto;" onchange="changeRetention(this.value)">
+                        <option value="7">7 days</option>
+                        <option value="30" selected>30 days</option>
+                        <option value="90">90 days</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Offline Help -->
+            <div class="card" style="background: var(--bg-input); margin-top: 20px;">
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <i class="fas fa-info-circle" style="font-size: 24px; color: var(--primary);"></i>
+                    <div>
+                        <p style="font-weight: 500; margin-bottom: 4px;">How Offline Mode Works</p>
+                        <p style="font-size: 12px; color: var(--text-light);">
+                            • Sign attendance without internet<br>
+                            • Records saved locally on your device<br>
+                            • Auto-sync when connection restored<br>
+                            • Cached data available for viewing
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="home.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="offline.html" class="nav-item active">
+                <i class="fas fa-wifi-slash"></i>
+                <span>Offline</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+    
+    <!-- Sync Progress Modal -->
+    <div id="syncModal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-title">
+                <i class="fas fa-sync-alt fa-spin" style="color: var(--primary);"></i>
+                Syncing...
+            </div>
+            
+            <div style="margin: 20px 0;">
+                <div class="progress-bar" style="height: 8px;">
+                    <div class="progress-fill" id="syncProgress" style="width: 0%;"></div>
+                </div>
+                <p style="text-align: center; margin-top: 8px;" id="syncStatus">Preparing to sync...</p>
+            </div>
+            
+            <div style="display: flex; justify-content: center;">
+                <button class="btn btn-outline" onclick="cancelSync()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Mock Data
+        let mockPendingItems = [
+            {
+                id: 'P001',
+                type: 'attendance',
+                event: 'Mathematics 10A',
+                timestamp: '2026-02-26T08:32:00',
+                location: {lat: -8.9418, lng: 33.4155}
+            },
+            {
+                id: 'P002',
+                type: 'attendance',
+                event: 'Physics Lab',
+                timestamp: '2026-02-26T11:05:00',
+                location: {lat: -8.9419, lng: 33.4156}
+            }
+        ];
+        
+        let mockSyncedItems = [
+            {
+                id: 'S001',
+                type: 'attendance',
+                event: 'Chemistry 10B',
+                timestamp: '2026-02-25T08:30:00',
+                syncedAt: '2026-02-25T10:15:00'
+            },
+            {
+                id: 'S002',
+                type: 'attendance',
+                event: 'Computer Science',
+                timestamp: '2026-02-24T14:00:00',
+                syncedAt: '2026-02-24T16:20:00'
+            }
+        ];
+        
+        let syncInterval = null;
+        let syncCancelled = false;
+        
+        // Initialize Page
+        window.onload = function() {
+            checkConnection();
+            loadPendingItems();
+            loadSyncedItems();
+            loadCacheStats();
+            loadSettings();
+            
+            // Check connection status periodically
+            setInterval(checkConnection, 3000);
+        };
+        
+        // Connection Check
+        function checkConnection() {
+            const banner = document.getElementById('connectionBanner');
+            const status = document.getElementById('connectionStatus');
+            
+            if(navigator.onLine) {
+                banner.style.display = 'none';
+                // Check if there are pending items
+                if(mockPendingItems.length > 0 && document.getElementById('autoSync').checked) {
+                    // Auto sync if enabled
+                    syncNow();
+                }
+            } else {
+                banner.style.display = 'block';
+                status.textContent = "You're offline - working in offline mode";
+            }
+        }
+        
+        window.addEventListener('online', function() {
+            showToast('Connection restored!', 'success');
+            checkConnection();
+        });
+        
+        window.addEventListener('offline', function() {
+            showToast('You are now offline', 'warning');
+            checkConnection();
+        });
+        
+        // Load Pending Items
+        function loadPendingItems() {
+            const container = document.getElementById('pendingList');
+            const badge = document.getElementById('pendingBadge');
+            const queueCount = document.getElementById('queueCount');
+            
+            badge.textContent = mockPendingItems.length;
+            queueCount.textContent = `${mockPendingItems.length} items pending sync`;
+            
+            if(mockPendingItems.length === 0) {
+                container.innerHTML = `
+                    <div style="padding: 24px; text-align: center; color: var(--text-light);">
+                        <i class="fas fa-check-circle" style="font-size: 32px; color: var(--success); margin-bottom: 8px;"></i>
+                        <p>All caught up! No pending items</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            mockPendingItems.forEach((item, index) => {
+                const date = new Date(item.timestamp);
+                html += `
+                    <div class="queue-item" style="padding: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <i class="fas fa-clock" style="color: var(--warning);"></i>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 500;">${item.event}</div>
+                                <div style="font-size: 12px; color: var(--text-light);">
+                                    ${formatDateTime(date)}
+                                </div>
+                            </div>
+                            <button class="btn btn-icon" onclick="removePending('${item.id}')" style="color: var(--danger);">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Load Synced Items
+        function loadSyncedItems() {
+            const container = document.getElementById('syncedList');
+            
+            if(mockSyncedItems.length === 0) {
+                container.innerHTML = `
+                    <div style="padding: 16px; text-align: center; color: var(--text-light);">
+                        No synced items yet
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            mockSyncedItems.forEach(item => {
+                const date = new Date(item.timestamp);
+                const synced = new Date(item.syncedAt);
+                html += `
+                    <div class="queue-item" style="padding: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 500;">${item.event}</div>
+                                <div style="font-size: 12px; color: var(--text-light);">
+                                    ${formatDateTime(date)} • Synced ${formatTime(synced)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Load Cache Stats
+        function loadCacheStats() {
+            // Mock stats
+            document.getElementById('cachedEvents').textContent = '24';
+            document.getElementById('cachedAnnouncements').textContent = '12';
+            document.getElementById('cachedAttendance').textContent = '156';
+            document.getElementById('cacheSize').textContent = '24.5';
+        }
+        
+        // Load Settings
+        function loadSettings() {
+            document.getElementById('autoSync').checked = localStorage.getItem('autoSync') !== 'false';
+            document.getElementById('offlineNotif').checked = localStorage.getItem('offlineNotif') !== 'false';
+            
+            const retention = localStorage.getItem('retentionDays') || '30';
+            const select = document.querySelector('select');
+            select.value = retention;
+        }
+        
+        // Sync Now
+        function syncNow() {
+            if(mockPendingItems.length === 0) {
+                showToast('Nothing to sync', 'info');
+                return;
+            }
+            
+            if(!navigator.onLine) {
+                showToast('No internet connection', 'error');
+                return;
+            }
+            
+            // Show sync modal
+            document.getElementById('syncModal').style.display = 'flex';
+            document.getElementById('syncButton').disabled = true;
+            
+            // Simulate sync progress
+            let progress = 0;
+            syncCancelled = false;
+            
+            syncInterval = setInterval(() => {
+                if(syncCancelled) {
+                    clearInterval(syncInterval);
+                    document.getElementById('syncModal').style.display = 'none';
+                    document.getElementById('syncButton').disabled = false;
+                    return;
+                }
+                
+                progress += 10;
+                document.getElementById('syncProgress').style.width = progress + '%';
+                
+                if(progress === 30) {
+                    document.getElementById('syncStatus').textContent = 'Verifying locations...';
+                } else if(progress === 60) {
+                    document.getElementById('syncStatus').textContent = 'Uploading records...';
+                } else if(progress === 90) {
+                    document.getElementById('syncStatus').textContent = 'Almost done...';
+                }
+                
+                if(progress >= 100) {
+                    clearInterval(syncInterval);
+                    
+                    // Move pending to synced
+                    mockSyncedItems = [...mockPendingItems.map(item => ({
+                        ...item,
+                        syncedAt: new Date().toISOString()
+                    })), ...mockSyncedItems];
+                    
+                    mockPendingItems = [];
+                    
+                    // Update UI
+                    loadPendingItems();
+                    loadSyncedItems();
+                    
+                    // Close modal
+                    setTimeout(() => {
+                        document.getElementById('syncModal').style.display = 'none';
+                        document.getElementById('syncButton').disabled = false;
+                        showToast('Sync complete!', 'success');
+                    }, 500);
+                }
+            }, 500);
+        }
+        
+        // Cancel Sync
+        function cancelSync() {
+            syncCancelled = true;
+            showToast('Sync cancelled', 'warning');
+        }
+        
+        // Remove Pending Item
+        function removePending(id) {
+            if(confirm('Remove this item from sync queue?')) {
+                mockPendingItems = mockPendingItems.filter(item => item.id !== id);
+                loadPendingItems();
+                showToast('Item removed', 'success');
+            }
+        }
+        
+        // View Cached Data
+        function viewCachedData() {
+            alert('View cached offline data');
+        }
+        
+        // Clear Cached Data
+        function clearCachedData() {
+            if(confirm('Clear all cached data? This will remove offline attendance records that haven\'t been synced.')) {
+                mockPendingItems = [];
+                mockSyncedItems = [];
+                loadPendingItems();
+                loadSyncedItems();
+                showToast('Cache cleared', 'success');
+            }
+        }
+        
+        // Toggle Settings
+        function toggleAutoSync() {
+            const enabled = document.getElementById('autoSync').checked;
+            localStorage.setItem('autoSync', enabled);
+            showToast(`Auto-sync ${enabled ? 'enabled' : 'disabled'}`, 'success');
+        }
+        
+        function toggleOfflineNotif() {
+            const enabled = document.getElementById('offlineNotif').checked;
+            localStorage.setItem('offlineNotif', enabled);
+            showToast(`Offline notifications ${enabled ? 'enabled' : 'disabled'}`, 'success');
+        }
+        
+        function changeRetention(days) {
+            localStorage.setItem('retentionDays', days);
+            showToast(`Data retention: ${days} days`, 'success');
+        }
+        
+        // Format Date/Time
+        function formatDateTime(date) {
+            return date.toLocaleString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        function formatTime(date) {
+            return date.toLocaleTimeString('en-GB', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed; bottom: 100px; left: 20px; right: 20px;
+                background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--danger)' : 'var(--warning)'};
+                color: white; padding: 12px; border-radius: 8px;
+                text-align: center; z-index: 1000; animation: fadeIn 0.3s;
+            `;
+            
+            const icon = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'exclamation-triangle';
+            toast.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+        
+        // Click outside modal to close
+        window.onclick = function(event) {
+            const modal = document.getElementById('syncModal');
+            if(event.target === modal) {
+                cancelSync();
+            }
+        };
+    </script>
+    
+    <!-- Core JS -->
+    <script src="../core/config.js"></script>
+    <script src="../core/offline.js"></script>
+</body>
+</html>
