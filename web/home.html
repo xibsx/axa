@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Home - SAMS</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Header -->
+        <div style="padding: var(--space-md); background: var(--bg-card); border-bottom: 1px solid var(--border);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2 style="font-size: 20px;">Welcome back,</h2>
+                    <p style="color: var(--text-light); display: flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>
+                        <span id="userLocation">Detecting location...</span>
+                    </p>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <i class="fas fa-bell" style="font-size: 20px; color: var(--text-light);"></i>
+                    <i class="fas fa-sync-alt" id="syncStatus" style="font-size: 20px; color: var(--success);"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Offline Banner (Hidden by default) -->
+        <div id="offlineBanner" class="offline-banner" style="display: none; margin: 10px; border-radius: 8px;">
+            <i class="fas fa-wifi-slash"></i>
+            You're offline. Changes will sync when online.
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content" style="padding-bottom: 80px;">
+            
+            <!-- Today's Events Section -->
+            <div style="margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-calendar-day" style="color: var(--primary);"></i>
+                        Today's Events
+                    </h3>
+                    <span style="background: var(--bg-input); padding: 4px 12px; border-radius: 20px; font-size: 12px;" id="eventCount">
+                        2 events
+                    </span>
+                </div>
+                
+                <!-- Event Cards Container -->
+                <div id="todayEvents">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+                
+                <!-- No Events Message (Hidden by default) -->
+                <div id="noEvents" class="card text-center" style="display: none; padding: 32px;">
+                    <i class="fas fa-calendar-check" style="font-size: 48px; color: var(--text-lighter); margin-bottom: 16px;"></i>
+                    <p style="color: var(--text-light);">No events scheduled for today</p>
+                </div>
+            </div>
+            
+            <!-- Announcements Section -->
+            <div style="margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-bullhorn" style="color: var(--primary);"></i>
+                        Announcements
+                    </h3>
+                    <a href="#" style="color: var(--primary); font-size: 14px;">View all</a>
+                </div>
+                
+                <!-- Announcements Container -->
+                <div id="announcements">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Quick Stats Section -->
+            <div style="margin-bottom: 24px;">
+                <h3 style="margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-chart-line" style="color: var(--primary);"></i>
+                    This Month
+                </h3>
+                
+                <div class="profile-stats" id="attendanceStats">
+                    <!-- Stats will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Upcoming Events Preview -->
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-calendar-alt" style="color: var(--primary);"></i>
+                        Upcoming
+                    </h3>
+                    <a href="#" style="color: var(--primary); font-size: 14px;">View calendar</a>
+                </div>
+                
+                <div id="upcomingEvents">
+                    <!-- Upcoming events will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="home.html" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="offline.html" class="nav-item">
+                <i class="fas fa-wifi-slash"></i>
+                <span>Offline</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+    
+    <!-- Sign Confirmation Modal (Hidden by default) -->
+    <div id="signModal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-title">
+                <i class="fas fa-check-circle" style="color: var(--success); margin-right: 8px;"></i>
+                Confirm Sign-In
+            </div>
+            <p id="modalEventName">Mathematics 10A</p>
+            <p style="color: var(--text-light); font-size: 14px; margin: 8px 0;">
+                <i class="fas fa-map-marker-alt"></i> <span id="modalLocation">Room 201</span>
+            </p>
+            <p style="color: var(--text-light); font-size: 14px;">
+                <i class="fas fa-clock"></i> <span id="modalTime">08:30 - 10:00</span>
+            </p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" style="flex: 1;" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-success" style="flex: 1;" onclick="confirmSign()">Sign In</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Success Toast (Hidden) -->
+    <div id="successToast" style="position: fixed; bottom: 100px; left: 20px; right: 20px; background: var(--success); color: white; padding: 12px; border-radius: 8px; text-align: center; display: none; z-index: 1000;">
+        <i class="fas fa-check-circle"></i> Attendance marked successfully!
+    </div>
+    
+    <script>
+        // Global Variables
+        let currentEventId = null;
+        let userLocation = null;
+        let isOnline = navigator.onLine;
+        
+        // Mock Data (Replace with actual API calls)
+        const mockEvents = [
+            {
+                id: 'EVT001',
+                name: 'Mathematics 10A',
+                location: 'Room 201',
+                startTime: '08:30',
+                endTime: '10:00',
+                signed: false,
+                signedCount: 42,
+                totalStudents: 45,
+                location: {
+                    lat: -8.9418657,
+                    lng: 33.4155208,
+                    radius: 30
+                }
+            },
+            {
+                id: 'EVT002',
+                name: 'Physics Lab',
+                location: 'Lab 305',
+                startTime: '11:00',
+                endTime: '13:00',
+                signed: true,
+                signedCount: 38,
+                totalStudents: 40
+            }
+        ];
+        
+        const mockAnnouncements = [
+            {
+                title: 'School Closed Tomorrow',
+                content: 'Due to heavy rains, all classes are canceled.',
+                time: '2h ago',
+                pinned: true
+            },
+            {
+                title: 'Exam Schedule Released',
+                content: 'Final exams start next Monday. Check portal for details.',
+                time: '1d ago',
+                pinned: false
+            }
+        ];
+        
+        const mockUpcoming = [
+            {
+                name: 'Chemistry 10B',
+                date: 'Tomorrow',
+                time: '08:30 AM'
+            },
+            {
+                name: 'Computer Science',
+                date: 'Wed, Mar 1',
+                time: '02:00 PM'
+            }
+        ];
+        
+        // Initialize Page
+        window.onload = function() {
+            checkOnlineStatus();
+            detectLocation();
+            loadEvents();
+            loadAnnouncements();
+            loadUpcoming();
+            loadStats();
+            setupEventListeners();
+            checkOfflineQueue();
+        };
+        
+        // Online/Offline Detection
+        function checkOnlineStatus() {
+            const banner = document.getElementById('offlineBanner');
+            const syncIcon = document.getElementById('syncStatus');
+            
+            if(!navigator.onLine) {
+                banner.style.display = 'block';
+                syncIcon.className = 'fas fa-exclamation-triangle';
+                syncIcon.style.color = 'var(--warning)';
+            } else {
+                banner.style.display = 'none';
+                syncIcon.className = 'fas fa-sync-alt';
+                syncIcon.style.color = 'var(--success)';
+            }
+        }
+        
+        window.addEventListener('online', checkOnlineStatus);
+        window.addEventListener('offline', checkOnlineStatus);
+        
+        // Location Detection
+        function detectLocation() {
+            const locEl = document.getElementById('userLocation');
+            
+            if(!navigator.geolocation) {
+                locEl.textContent = 'Location not supported';
+                return;
+            }
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    locEl.textContent = 'Location detected';
+                    checkEventProximity();
+                },
+                (error) => {
+                    console.error('Location error:', error);
+                    locEl.textContent = 'Enable location for attendance';
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        }
+        
+        // Load Today's Events
+        function loadEvents() {
+            const container = document.getElementById('todayEvents');
+            const noEvents = document.getElementById('noEvents');
+            
+            if(mockEvents.length === 0) {
+                container.innerHTML = '';
+                noEvents.style.display = 'block';
+                document.getElementById('eventCount').textContent = '0 events';
+                return;
+            }
+            
+            noEvents.style.display = 'none';
+            document.getElementById('eventCount').textContent = `${mockEvents.length} events`;
+            
+            let html = '';
+            mockEvents.forEach(event => {
+                const isSigned = event.signed;
+                const progress = (event.signedCount / event.totalStudents) * 100;
+                
+                html += `
+                    <div class="event-card" id="event-${event.id}" style="margin-bottom: 12px;">
+                        <div class="event-header">
+                            <span class="event-name">${event.name}</span>
+                            ${isSigned ? 
+                                '<span class="event-signed"><i class="fas fa-check"></i> Signed</span>' : 
+                                '<span class="event-missed">Not signed</span>'}
+                        </div>
+                        <div class="event-time">
+                            <i class="fas fa-clock"></i> ${event.startTime} - ${event.endTime}
+                        </div>
+                        <div class="event-location">
+                            <i class="fas fa-map-marker-alt"></i> ${event.location}
+                        </div>
+                        <div class="event-status">
+                            <div style="flex: 1; margin-right: 12px;">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${progress}%;"></div>
+                                </div>
+                                <span style="font-size: 12px; color: var(--text-light);">
+                                    ${event.signedCount}/${event.totalStudents} signed
+                                </span>
+                            </div>
+                            ${!isSigned ? 
+                                `<button class="btn btn-primary" style="padding: 6px 16px;" onclick="openSignModal('${event.id}')">
+                                    Sign
+                                </button>` : 
+                                `<button class="btn btn-outline" style="padding: 6px 16px;" onclick="viewDetails('${event.id}')">
+                                    View
+                                </button>`
+                            }
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Load Announcements
+        function loadAnnouncements() {
+            const container = document.getElementById('announcements');
+            
+            let html = '';
+            mockAnnouncements.forEach(announcement => {
+                html += `
+                    <div class="announcement-item card" style="margin-bottom: 8px; ${announcement.pinned ? 'border-left: 4px solid var(--primary);' : ''}">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span class="announcement-title">
+                                ${announcement.pinned ? '<i class="fas fa-thumbtack" style="color: var(--primary); margin-right: 6px;"></i>' : ''}
+                                ${announcement.title}
+                            </span>
+                            <span style="color: var(--text-lighter); font-size: 12px;">${announcement.time}</span>
+                        </div>
+                        <p style="color: var(--text-light); margin-top: 8px; font-size: 14px;">${announcement.content}</p>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Load Upcoming Events
+        function loadUpcoming() {
+            const container = document.getElementById('upcomingEvents');
+            
+            if(mockUpcoming.length === 0) {
+                container.innerHTML = '<div class="card text-center" style="padding: 24px;"><p style="color: var(--text-light);">No upcoming events</p></div>';
+                return;
+            }
+            
+            let html = '';
+            mockUpcoming.forEach(event => {
+                html += `
+                    <div class="card" style="margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 500;">${event.name}</div>
+                            <div style="font-size: 12px; color: var(--text-light);">${event.date} • ${event.time}</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--text-lighter);"></i>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Load Stats
+        function loadStats() {
+            const container = document.getElementById('attendanceStats');
+            
+            container.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">42</div>
+                    <div class="stat-label">Present</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Missed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">93%</div>
+                    <div class="stat-label">Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Days left</div>
+                </div>
+            `;
+        }
+        
+        // Sign Modal
+        function openSignModal(eventId) {
+            const event = mockEvents.find(e => e.id === eventId);
+            if(!event) return;
+            
+            currentEventId = eventId;
+            document.getElementById('modalEventName').textContent = event.name;
+            document.getElementById('modalLocation').textContent = event.location;
+            document.getElementById('modalTime').textContent = `${event.startTime} - ${event.endTime}`;
+            document.getElementById('signModal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.getElementById('signModal').style.display = 'none';
+            currentEventId = null;
+        }
+        
+        function confirmSign() {
+            if(!userLocation) {
+                alert('Please enable location to sign attendance');
+                closeModal();
+                return;
+            }
+            
+            // Check if user is in location (mock)
+            const inLocation = true; // Replace with actual location check
+            
+            if(!inLocation) {
+                alert('You are not in the attendance area');
+                closeModal();
+                return;
+            }
+            
+            // Show loading
+            const btn = document.querySelector('.modal .btn-success');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing...';
+            btn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Update event status
+                const event = mockEvents.find(e => e.id === currentEventId);
+                if(event) {
+                    event.signed = true;
+                    event.signedCount++;
+                }
+                
+                // Reload events
+                loadEvents();
+                
+                // Show success toast
+                showToast();
+                
+                // Close modal
+                closeModal();
+                
+                // Reset button
+                btn.innerHTML = 'Sign In';
+                btn.disabled = false;
+                
+                // Save to offline queue if needed
+                if(!navigator.onLine) {
+                    saveToOfflineQueue(currentEventId);
+                }
+            }, 1500);
+        }
+        
+        // Check Proximity to Events
+        function checkEventProximity() {
+            if(!userLocation) return;
+            
+            // Check each event if user is nearby
+            mockEvents.forEach(event => {
+                if(event.location) {
+                    const distance = calculateDistance(
+                        userLocation.lat, userLocation.lng,
+                        event.location.lat, event.location.lng
+                    );
+                    
+                    if(distance <= event.location.radius) {
+                        // User is within range
+                        console.log(`Near ${event.name}`);
+                    }
+                }
+            });
+        }
+        
+        // Distance Calculator (Haversine)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; // Earth's radius in meters
+            const φ1 = lat1 * Math.PI/180;
+            const φ2 = lat2 * Math.PI/180;
+            const Δφ = (lat2-lat1) * Math.PI/180;
+            const Δλ = (lon2-lon1) * Math.PI/180;
+            
+            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                    Math.cos(φ1) * Math.cos(φ2) *
+                    Math.sin(Δλ/2) * Math.sin(Δλ/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            
+            return R * c; // Distance in meters
+        }
+        
+        // Offline Queue
+        function saveToOfflineQueue(eventId) {
+            let queue = JSON.parse(localStorage.getItem('offlineQueue')) || [];
+            queue.push({
+                eventId: eventId,
+                timestamp: new Date().toISOString(),
+                location: userLocation
+            });
+            localStorage.setItem('offlineQueue', JSON.stringify(queue));
+            
+            // Update sync icon
+            document.getElementById('syncStatus').className = 'fas fa-clock';
+            document.getElementById('syncStatus').style.color = 'var(--warning)';
+        }
+        
+        function checkOfflineQueue() {
+            const queue = JSON.parse(localStorage.getItem('offlineQueue')) || [];
+            if(queue.length > 0) {
+                document.getElementById('syncStatus').className = 'fas fa-clock';
+                document.getElementById('syncStatus').style.color = 'var(--warning)';
+            }
+        }
+        
+        // Toast Notification
+        function showToast() {
+            const toast = document.getElementById('successToast');
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+        
+        // View Details
+        function viewDetails(eventId) {
+            alert('View details for event: ' + eventId);
+        }
+        
+        // Setup Event Listeners
+        function setupEventListeners() {
+            // Click outside modal to close
+            window.onclick = function(event) {
+                const modal = document.getElementById('signModal');
+                if(event.target === modal) {
+                    closeModal();
+                }
+            };
+        }
+    </script>
+    
+    <!-- Core JS -->
+    <script src="../core/config.js"></script>
+    <script src="../core/location.js"></script>
+    <script src="../core/offline.js"></script>
+</body>
+</html>
