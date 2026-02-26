@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Settings - SAMS</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Header -->
+        <div style="padding: var(--space-md); background: var(--bg-card); border-bottom: 1px solid var(--border);">
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <a href="home.html" class="btn btn-icon" style="border-radius: 50%;">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h2>Settings</h2>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content" style="padding-bottom: 80px;">
+            
+            <!-- Appearance Section -->
+            <div class="settings-group">
+                <div style="padding: 0 var(--space-md); margin-bottom: 8px;">
+                    <span style="color: var(--primary); font-weight: 500; font-size: 14px;">
+                        <i class="fas fa-paint-brush"></i> APPEARANCE
+                    </span>
+                </div>
+                
+                <div class="card" style="padding: 0;">
+                    <div class="settings-item">
+                        <div class="settings-item-left">
+                            <i class="fas fa-sun settings-icon"></i>
+                            <span>Light Mode</span>
+                        </div>
+                        <label class="switch">
+                            <input type="radio" name="theme" value="light" onchange="changeTheme('light')" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="settings-item-left">
+                            <i class="fas fa-moon settings-icon"></i>
+                            <span>Dark Mode</span>
+                        </div>
+                        <label class="switch">
+                            <input type="radio" name="theme" value="dark" onchange="changeTheme('dark')">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="settings-item" style="border-bottom: none;">
+                        <div class="settings-item-left">
+                            <i class="fas fa-cog settings-icon"></i>
+                            <span>Auto (Follow System)</span>
+                        </div>
+                        <label class="switch">
+                            <input type="radio" name="theme" value="auto" onchange="changeTheme('auto')">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Notifications Section -->
+            <div class="settings-group">
+                <div style="padding: 0 var(--space-md); margin-bottom: 8px;">
+                    <span style="color: var(--primary); font-weight: 500; font-size: 14px;">
+                        <i class="fas fa-bell"></i> NOTIFICATIONS
+                    </span>
+                </div>
+                
+                <div class="card" style="padding: 0;">
+                    <div class="settings-item">
+                        <div class="settings-item-left">
+                            <i class="fas fa-bell settings-icon"></i>
+                            <span>Push Notifications</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="pushNotif" onchange="toggleNotification('push')" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="settings-item">
+                        <div class="settings-item-left">
+                            <i class="fab fa-whatsapp settings-icon" style="color: #25D366;"></i>
+                            <span>WhatsApp Alerts</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="waNotif" onchange="toggleNotification('whatsapp')" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="settings-item" style="border-bottom: none;">
+                        <div class="settings-item-left">
+                            <i class="fas fa-envelope settings-icon"></i>
+                            <span>Email Notifications</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="emailNotif" onchange="toggleNotification('email')">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="card" style="margin-top: 8px;">
+                    <div class="settings-item" onclick="notificationSettings()">
+                        <div class="settings-item-left">
+                            <i class="fas fa-sliders-h settings-icon"></i>
+                            <span>Notification Preferences</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--text-lighter);"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Security Section -->
+            <div class="settings-group">
+                <div style="padding: 0 var(--space-md); margin-bottom: 8px;">
+                    <span style="color: var(--primary); font-weight: 500; font-size: 14px;">
+                        <i class="fas fa-lock"></i> SECURITY
+                    </span>
+                </div>
+                
+                <div class="card" style="padding: 0;">
+                    <div class="settings-item" onclick="changePassword()">
+                        <div class="settings-item-left">
+                            <i class="fas fa-key settings-icon"></i>
+                            <span>Change Password</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--text-lighter);"></i>
+                    </div>
+                    
+                    <div class="settings-item" onclick="changePasskey()">
+                        <div class="settings-item-left">
+                            <i class="fas fa-shield-alt settings-icon"></i>
+                            <span>Change Passkey</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--text-lighter);"></i>
+                    </div>
+                    
+                    <div class="settings-item" onclick="twoFactorAuth()">
+                        <div class="settings-item-left">
+                            <i class="fas fa-mobile-alt settings-icon"></i>
+                            <span>Two-Factor Authentication</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="twoFactor" onchange="toggle2FA()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="settings-item" style="border-bottom: none;" onclick="sessionsList()">
+                        <div class="settings-item-left">
+                            <i class="fas fa-history settings-icon"></i>
+                            <span>Active Sessions</span>
+                        </div>
+                        <span style="color: var(--text-light); font-size: 12px;">2 devices</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data & Storage Section -->
+            <div class="settings-group">
+                <div style="padding: 0 var(--space-md); margin-bottom: 8px;">
+                    <span style="color: var(--primary); font-weight: 500; font-size: 14px;">
+                        <i class="fas fa-database"></i> DATA & STORAGE
+                    </span>
+                </div>
+                
+                <div class="card">
+                    <div style="margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Local Storage Usage</span>
+                            <span id="storageUsage">24.5 MB</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="storageBar" style="width: 40%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <button class="btn btn-outline" onclick="clearCache()">
+                            <i class="fas fa-trash"></i> Clear Cache
+                        </button>
+                        <button class="btn btn-outline" onclick="exportData()">
+                            <i class="fas fa-download"></i> Export Data
+                        </button>
+                    </div>
+                    
+                    <div style="margin-top: 16px;">
+                        <div class="settings-item" onclick="offlineSettings()" style="padding: 12px 0; border-bottom: none;">
+                            <div class="settings-item-left">
+                                <i class="fas fa-wifi-slash settings-icon"></i>
+                                <span>Offline Mode Settings</span>
+                            </div>
+                            <i class="fas fa-chevron-right" style="color: var(--text-lighter);"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Help & Support Section -->
+            <div class="settings-group">
+                <div style="padding: 0 var(--space-md); margin-bottom: 8px;">
+                    <span style="color: var(--primary); font-weight: 500; font-size: 14px;">
+                        <i class="fas fa-question-circle"></i> HELP & SUPPORT
+                    </span>
+                </div>
+                
+                <div class="card" style="padding: 0;">
+                    <div class="settings-item" onclick="openAI()">
+                        <div class="settings-item-left">
+                            <i class="fas fa-robot settings-icon" style="color: var(--primary);"></i>
+                            <span>AI Assistant</span>
+                        </div>
+                        <span style="color: var(--text-light); font-size: 12px;">Online</span>
+                    </div>
+                    
+                    <div class="settings-item" onclick="openFAQ()">
+                        <div class="settings-item-left">
+                            <i class="fas fa-question settings-icon"></i>
+                            <span>FAQs</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--text-lighter);"></i>
+                    </div>
+                    
+                    <div class="settings-item" onclick="contactSupport()">
+                        <div class="settings-item-left">
+                            <i class="fas fa-headset settings-icon"></i>
+                            <span>Contact Support</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--text-lighter);"></i>
+                    </div>
+                    
+                    <div class="settings-item" onclick="reportProblem()">
+                        <div class="settings-item-left">
+                            <i class="fas fa-bug settings-icon"></i>
+                            <span>Report a Problem</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--text-lighter);"></i>
+                    </div>
+                    
+                    <div class="settings-item" style="border-bottom: none;" onclick="rateApp()">
+                        <div class="settings-item-left">
+                            <i class="fas fa-star settings-icon" style="color: #FFD700;"></i>
+                            <span>Rate the App</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--text-lighter);"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- About Section -->
+            <div class="settings-group">
+                <div style="padding: 0 var(--space-md); margin-bottom: 8px;">
+                    <span style="color: var(--primary); font-weight: 500; font-size: 14px;">
+                        <i class="fas fa-info-circle"></i> ABOUT
+                    </span>
+                </div>
+                
+                <div class="card" style="padding: 0;">
+                    <div class="settings-item" onclick="openPrivacy()">
+                        <div class="settings-item-left">
+                            <i class="fas fa-shield-alt settings-icon"></i>
+                            <span>Privacy Policy</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--text-lighter);"></i>
+                    </div>
+                    
+                    <div class="settings-item" onclick="openTerms()">
+                        <div class="settings-item-left">
+                            <i class="fas fa-file-contract settings-icon"></i>
+                            <span>Terms of Service</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--text-lighter);"></i>
+                    </div>
+                    
+                    <div class="settings-item" onclick="openLicenses()">
+                        <div class="settings-item-left">
+                            <i class="fas fa-copyright settings-icon"></i>
+                            <span>Open Source Licenses</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--text-lighter);"></i>
+                    </div>
+                    
+                    <div class="settings-item" style="border-bottom: none;">
+                        <div class="settings-item-left">
+                            <i class="fas fa-code-branch settings-icon"></i>
+                            <span>Version</span>
+                        </div>
+                        <span style="color: var(--text-light);">v1.0.0 (build 2026.02)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Logout Button -->
+            <div style="margin: 24px 0;">
+                <button class="btn btn-danger btn-block" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+            
+            <!-- Danger Zone (Admin/CR only - hidden by default) -->
+            <div id="dangerZone" style="display: none; margin-top: 24px;">
+                <div style="padding: 0 var(--space-md); margin-bottom: 8px;">
+                    <span style="color: var(--danger); font-weight: 500; font-size: 14px;">
+                        <i class="fas fa-exclamation-triangle"></i> DANGER ZONE
+                    </span>
+                </div>
+                
+                <div class="card" style="border: 1px solid var(--danger);">
+                    <div class="settings-item" onclick="deleteAccount()">
+                        <div class="settings-item-left">
+                            <i class="fas fa-trash-alt" style="color: var(--danger);"></i>
+                            <span style="color: var(--danger);">Delete Account</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--text-lighter);"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="home.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="offline.html" class="nav-item">
+                <i class="fas fa-wifi-slash"></i>
+                <span>Offline</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+            <a href="settings.html" class="nav-item active">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+    
+    <!-- AI Assistant Modal -->
+    <div id="aiModal" class="modal-overlay" style="display: none;">
+        <div class="modal" style="height: 80%; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div class="modal-title">
+                    <i class="fas fa-robot" style="color: var(--primary);"></i>
+                    AI Assistant
+                </div>
+                <button class="btn btn-icon" onclick="closeAIModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Chat Area -->
+            <div id="chatMessages" style="flex: 1; overflow-y: auto; margin-bottom: 16px; padding: 8px;">
+                <div style="background: var(--bg-input); padding: 12px; border-radius: 12px; margin-bottom: 12px; max-width: 80%;">
+                    <div style="font-weight: 500; margin-bottom: 4px;">🤖 SAMS AI</div>
+                    <div>Hello! How can I help you with SAMS today?</div>
+                </div>
+            </div>
+            
+            <!-- Input Area -->
+            <div style="display: flex; gap: 8px;">
+                <input type="text" class="form-input" id="aiQuestion" placeholder="Ask me anything..." style="flex: 1;">
+                <button class="btn btn-primary" onclick="askAI()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize Page
+        window.onload = function() {
+            loadSettings();
+            checkUserRole();
+            calculateStorage();
+        };
+        
+        // Load Saved Settings
+        function loadSettings() {
+            // Theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.querySelectorAll('input[name="theme"]').forEach(radio => {
+                if(radio.value === savedTheme) radio.checked = true;
+            });
+            
+            // Notifications
+            document.getElementById('pushNotif').checked = localStorage.getItem('pushNotif') !== 'false';
+            document.getElementById('waNotif').checked = localStorage.getItem('waNotif') !== 'false';
+            document.getElementById('emailNotif').checked = localStorage.getItem('emailNotif') === 'true';
+            
+            // Two Factor
+            document.getElementById('twoFactor').checked = localStorage.getItem('twoFactor') === 'true';
+        }
+        
+        // Theme Change
+        function changeTheme(theme) {
+            if(theme === 'dark') {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else if(theme === 'light') {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            } else {
+                // Auto - follow system
+                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if(systemDark) {
+                    document.body.classList.add('dark-mode');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                }
+                localStorage.setItem('theme', 'auto');
+            }
+        }
+        
+        // Notifications
+        function toggleNotification(type) {
+            const element = document.getElementById(type + 'Notif');
+            localStorage.setItem(type + 'Notif', element.checked);
+            
+            showToast(`${type} notifications ${element.checked ? 'enabled' : 'disabled'}`, 'success');
+        }
+        
+        function notificationSettings() {
+            alert('Open notification preferences');
+        }
+        
+        // Security
+        function changePassword() {
+            alert('Change password functionality');
+        }
+        
+        function changePasskey() {
+            alert('Change passkey functionality');
+        }
+        
+        function twoFactorAuth() {
+            const enabled = document.getElementById('twoFactor').checked;
+            if(enabled) {
+                if(confirm('Enable two-factor authentication?')) {
+                    localStorage.setItem('twoFactor', 'true');
+                    showToast('2FA enabled', 'success');
+                } else {
+                    document.getElementById('twoFactor').checked = false;
+                }
+            } else {
+                localStorage.setItem('twoFactor', 'false');
+                showToast('2FA disabled', 'info');
+            }
+        }
+        
+        function toggle2FA() {
+            twoFactorAuth();
+        }
+        
+        function sessionsList() {
+            alert('Show active sessions: 2 devices\n• Chrome on Windows (Current)\n• iPhone 13 (Last active: 2h ago)');
+        }
+        
+        // Data & Storage
+        function calculateStorage() {
+            // Calculate localStorage size
+            let total = 0;
+            for(let key in localStorage) {
+                if(localStorage.hasOwnProperty(key)) {
+                    total += localStorage[key].length * 2; // Approximate bytes
+                }
+            }
+            
+            const mb = (total / (1024 * 1024)).toFixed(1);
+            document.getElementById('storageUsage').textContent = mb + ' MB';
+            
+            // Assume max 50MB for localStorage
+            const percentage = (total / (50 * 1024 * 1024)) * 100;
+            document.getElementById('storageBar').style.width = Math.min(percentage, 100) + '%';
+        }
+        
+        function clearCache() {
+            if(confirm('Clear all cached data? Offline attendance records will not be deleted.')) {
+                // Clear cached data but keep user data
+                const keysToKeep = ['user_', 'currentUser', 'theme', 'pushNotif', 'waNotif', 'emailNotif', 'twoFactor'];
+                
+                for(let key in localStorage) {
+                    if(localStorage.hasOwnProperty(key)) {
+                        let keep = false;
+                        for(let k of keysToKeep) {
+                            if(key.startsWith(k) || key === k) {
+                                keep = true;
+                                break;
+                            }
+                        }
+                        if(!keep) {
+                            localStorage.removeItem(key);
+                        }
+                    }
+                }
+                
+                showToast('Cache cleared', 'success');
+                calculateStorage();
+            }
+        }
+        
+        function exportData() {
+            const data = {
+                user: JSON.parse(localStorage.getItem('currentUser')),
+                settings: {
+                    theme: localStorage.getItem('theme'),
+                    notifications: {
+                        push: localStorage.getItem('pushNotif'),
+                        wa: localStorage.getItem('waNotif'),
+                        email: localStorage.getItem('emailNotif')
+                    }
+                },
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sams-export-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            
+            showToast('Data exported', 'success');
+        }
+        
+        function offlineSettings() {
+            alert('Offline mode settings:\n• Auto-sync when online\n• Max cache size: 50MB\n• Keep offline data: 30 days');
+        }
+        
+        // Help & Support
+        function openAI() {
+            document.getElementById('aiModal').style.display = 'flex';
+        }
+        
+        function closeAIModal() {
+            document.getElementById('aiModal').style.display = 'none';
+        }
+        
+        function askAI() {
+            const question = document.getElementById('aiQuestion').value;
+            if(!question) return;
+            
+            const chat = document.getElementById('chatMessages');
+            
+            // Add user message
+            chat.innerHTML += `
+                <div style="background: var(--primary); color: white; padding: 12px; border-radius: 12px; margin-bottom: 12px; max-width: 80%; margin-left: auto;">
+                    <div>${question}</div>
+                </div>
+            `;
+            
+            // Clear input
+            document.getElementById('aiQuestion').value = '';
+            
+            // Simulate AI response
+            setTimeout(() => {
+                chat.innerHTML += `
+                    <div style="background: var(--bg-input); padding: 12px; border-radius: 12px; margin-bottom: 12px; max-width: 80%;">
+                        <div style="font-weight: 500; margin-bottom: 4px;">🤖 SAMS AI</div>
+                        <div>Thanks for your question! I'll help you with "${question}". This is a demo response.</div>
+                    </div>
+                `;
+                chat.scrollTop = chat.scrollHeight;
+            }, 1000);
+        }
+        
+        function openFAQ() {
+            alert('Open FAQs page');
+        }
+        
+        function contactSupport() {
+            window.location.href = 'mailto:support@sams.com';
+        }
+        
+        function reportProblem() {
+            alert('Open problem report form');
+        }
+        
+        function rateApp() {
+            alert('Rate app on store');
+        }
+        
+        // About
+        function openPrivacy() {
+            window.open('privacy.html', '_blank');
+        }
+        
+        function openTerms() {
+            alert('Terms of Service');
+        }
+        
+        function openLicenses() {
+            alert('Open source licenses');
+        }
+        
+        // Logout
+        function logout() {
+            if(confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // Check if user is admin/CR
+        function checkUserRole() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if(user && (user.role === 'admin' || user.role === 'cr' || user.role === 'xibs')) {
+                document.getElementById('dangerZone').style.display = 'block';
+            }
+        }
+        
+        // Delete Account (Admin/CR only)
+        function deleteAccount() {
+            if(confirm('⚠️ WARNING: This will permanently delete your account and all associated data. This action cannot be undone. Continue?')) {
+                alert('Account deletion requested. You will receive a confirmation via WhatsApp.');
+            }
+        }
+        
+        // Toast
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed; bottom: 100px; left: 20px; right: 20px; 
+                background: ${type === 'success' ? 'var(--success)' : 'var(--danger)'}; 
+                color: white; padding: 12px; border-radius: 8px; 
+                text-align: center; z-index: 1000; animation: fadeIn 0.3s;
+            `;
+            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+        
+        // Click outside modal to close
+        window.onclick = function(event) {
+            const modal = document.getElementById('aiModal');
+            if(event.target === modal) {
+                closeAIModal();
+            }
+        };
+    </script>
+    
+    <!-- Core JS -->
+    <script src="../core/config.js"></script>
+    <script src="../core/auth.js"></script>
+</body>
+</html>
