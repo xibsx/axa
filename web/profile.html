@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Profile - SAMS</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Header -->
+        <div style="padding: var(--space-md); background: var(--bg-card); border-bottom: 1px solid var(--border);">
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <a href="home.html" class="btn btn-icon" style="border-radius: 50%;">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h2>My Profile</h2>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content" style="padding-bottom: 80px;">
+            
+            <!-- Profile Header Card -->
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="userName">John Doe</h2>
+                        <p><i class="fas fa-id-card"></i> <span id="userReg">STU2024001</span></p>
+                        <p><i class="fas fa-envelope"></i> <span id="userEmail">john.doe@email.com</span></p>
+                    </div>
+                </div>
+                
+                <!-- College & Course -->
+                <div style="background: var(--bg-input); padding: 12px; border-radius: var(--radius); margin-top: 8px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span style="color: var(--text-light);">College:</span>
+                        <span style="font-weight: 500;" id="userCollege">University of Science Mbeya</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-light);">Course:</span>
+                        <span style="font-weight: 500;" id="userCourse">Computer Science (CS101)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Passkey Status Card -->
+            <div class="card" style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-key" style="color: var(--primary);"></i>
+                    Passkey Status
+                </h3>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div>
+                        <div style="font-weight: 500;">Current Passkey</div>
+                        <div style="font-size: 12px; color: var(--text-light);" id="passkeyExpiry">
+                            Expires: 26/03/2026
+                        </div>
+                    </div>
+                    <span class="badge badge-success" id="passkeyStatus">Active</span>
+                </div>
+                
+                <!-- Progress bar for passkey validity -->
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                        <span>15 days remaining</span>
+                        <span>30 days total</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 50%;"></div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-outline" style="flex: 1;" onclick="changePasskey()">
+                        <i class="fas fa-edit"></i> Change
+                    </button>
+                    <button class="btn btn-outline" style="flex: 1; color: var(--danger);" onclick="deletePasskey()">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Attendance Stats Card -->
+            <div class="card" style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-chart-bar" style="color: var(--primary);"></i>
+                    Attendance Summary
+                </h3>
+                
+                <!-- Stats Grid -->
+                <div class="profile-stats" style="margin-bottom: 16px;">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalPresent">42</div>
+                        <div class="stat-label">Present</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalMissed">3</div>
+                        <div class="stat-label">Missed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalEvents">45</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="attendanceRate">93%</div>
+                        <div class="stat-label">Rate</div>
+                    </div>
+                </div>
+                
+                <!-- Monthly Breakdown -->
+                <div style="margin-top: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-weight: 500;">This Month</span>
+                        <span style="color: var(--primary);">12/15</span>
+                    </div>
+                    <div class="progress-bar" style="margin-bottom: 16px;">
+                        <div class="progress-fill" style="width: 80%;"></div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-outline btn-block" onclick="viewFullHistory()">
+                    <i class="fas fa-history"></i> View Full History
+                </button>
+            </div>
+            
+            <!-- Recent Attendance History -->
+            <div class="card" style="margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-clock" style="color: var(--primary);"></i>
+                        Recent Activity
+                    </h3>
+                    <a href="#" style="color: var(--primary); font-size: 14px;">View all</a>
+                </div>
+                
+                <div id="recentHistory">
+                    <!-- History items will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Share Profile Card -->
+            <div class="card" style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-share-alt" style="color: var(--primary);"></i>
+                    Share Profile
+                </h3>
+                
+                <div style="background: var(--bg-input); padding: 12px; border-radius: var(--radius); margin-bottom: 12px;">
+                    <div style="font-size: 12px; color: var(--text-light); margin-bottom: 4px;">Profile Link</div>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" class="form-input" id="profileLink" value="https://sams.xibs.space/u/STU2024001" readonly style="background: var(--bg-card);">
+                        <button class="btn btn-icon" onclick="copyLink()" style="min-width: 44px;">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-outline" style="flex: 1;" onclick="shareWhatsApp()">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </button>
+                    <button class="btn btn-outline" style="flex: 1;" onclick="shareEmail()">
+                        <i class="fas fa-envelope"></i> Email
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Account Actions -->
+            <div class="card">
+                <div class="settings-item" onclick="editProfile()">
+                    <div class="settings-item-left">
+                        <i class="fas fa-user-edit settings-icon"></i>
+                        <span>Edit Profile</span>
+                    </div>
+                    <i class="fas fa-chevron-right" style="color: var(--text-lighter);"></i>
+                </div>
+                
+                <div class="settings-item" onclick="changePassword()">
+                    <div class="settings-item-left">
+                        <i class="fas fa-lock settings-icon"></i>
+                        <span>Change Password</span>
+                    </div>
+                    <i class="fas fa-chevron-right" style="color: var(--text-lighter);"></i>
+                </div>
+                
+                <div class="settings-item" style="color: var(--danger);" onclick="deleteAccount()">
+                    <div class="settings-item-left">
+                        <i class="fas fa-trash-alt settings-icon" style="color: var(--danger);"></i>
+                        <span>Delete Account</span>
+                    </div>
+                    <i class="fas fa-chevron-right" style="color: var(--text-lighter);"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="home.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="offline.html" class="nav-item">
+                <i class="fas fa-wifi-slash"></i>
+                <span>Offline</span>
+            </a>
+            <a href="profile.html" class="nav-item active">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+    
+    <!-- Delete Passkey Confirmation Modal -->
+    <div id="deletePasskeyModal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-title">
+                <i class="fas fa-exclamation-triangle" style="color: var(--danger); margin-right: 8px;"></i>
+                Delete Passkey
+            </div>
+            <p style="margin: 16px 0;">Are you sure you want to delete your passkey?</p>
+            <p style="color: var(--text-light); font-size: 14px; margin-bottom: 16px;">
+                • You'll need to create a new passkey to login offline<br>
+                • Your account will still work with password online<br>
+                • This action cannot be undone
+            </p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" style="flex: 1;" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" style="flex: 1;" onclick="confirmDeletePasskey()">Delete</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Change Passkey Modal -->
+    <div id="changePasskeyModal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-title">
+                <i class="fas fa-key" style="color: var(--primary); margin-right: 8px;"></i>
+                Change Passkey
+            </div>
+            
+            <div style="margin: 16px 0;">
+                <div class="form-group">
+                    <label class="form-label">Current Passkey</label>
+                    <input type="password" class="form-input" id="currentPasskey" maxlength="6">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">New Passkey (4-6 digits)</label>
+                    <input type="password" class="form-input" id="newPasskey" maxlength="6">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Confirm New Passkey</label>
+                    <input type="password" class="form-input" id="confirmPasskey" maxlength="6">
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn btn-outline" style="flex: 1;" onclick="closeChangeModal()">Cancel</button>
+                <button class="btn btn-primary" style="flex: 1;" onclick="confirmChangePasskey()">Update</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div id="toast" style="position: fixed; bottom: 100px; left: 20px; right: 20px; background: var(--success); color: white; padding: 12px; border-radius: 8px; text-align: center; display: none; z-index: 1000;">
+        <i class="fas fa-check-circle"></i> <span id="toastMessage">Copied to clipboard!</span>
+    </div>
+    
+    <script>
+        // Mock User Data (Replace with actual data from localStorage/API)
+        const userData = {
+            name: 'John Doe',
+            regNumber: 'STU2024001',
+            email: 'john.doe@email.com',
+            college: 'University of Science Mbeya',
+            course: 'Computer Science (CS101)',
+            passkeyExpiry: '2026-03-26',
+            passkeyCreated: '2026-02-26',
+            stats: {
+                present: 42,
+                missed: 3,
+                total: 45,
+                rate: 93
+            }
+        };
+        
+        // Mock History Data
+        const recentHistory = [
+            { date: '2026-02-26', event: 'Mathematics 10A', status: 'present', time: '08:32 AM' },
+            { date: '2026-02-25', event: 'Physics Lab', status: 'present', time: '11:05 AM' },
+            { date: '2026-02-24', event: 'Chemistry 10B', status: 'missed', time: null },
+            { date: '2026-02-23', event: 'Computer Science', status: 'present', time: '02:15 PM' },
+            { date: '2026-02-22', event: 'Mathematics 10A', status: 'present', time: '08:30 AM' }
+        ];
+        
+        // Initialize Page
+        window.onload = function() {
+            loadUserData();
+            loadRecentHistory();
+        };
+        
+        // Load User Data
+        function loadUserData() {
+            document.getElementById('userName').textContent = userData.name;
+            document.getElementById('userReg').textContent = userData.regNumber;
+            document.getElementById('userEmail').textContent = userData.email;
+            document.getElementById('userCollege').textContent = userData.college;
+            document.getElementById('userCourse').textContent = userData.course;
+            
+            // Calculate days remaining
+            const expiry = new Date(userData.passkeyExpiry);
+            const today = new Date();
+            const daysRemaining = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+            
+            if(daysRemaining > 0) {
+                document.getElementById('passkeyExpiry').textContent = `Expires: ${formatDate(expiry)}`;
+                document.getElementById('passkeyStatus').textContent = 'Active';
+                document.getElementById('passkeyStatus').className = 'badge badge-success';
+            } else {
+                document.getElementById('passkeyExpiry').textContent = 'Expired';
+                document.getElementById('passkeyStatus').textContent = 'Expired';
+                document.getElementById('passkeyStatus').className = 'badge badge-danger';
+            }
+            
+            // Update stats
+            document.getElementById('totalPresent').textContent = userData.stats.present;
+            document.getElementById('totalMissed').textContent = userData.stats.missed;
+            document.getElementById('totalEvents').textContent = userData.stats.total;
+            document.getElementById('attendanceRate').textContent = userData.stats.rate + '%';
+        }
+        
+        // Load Recent History
+        function loadRecentHistory() {
+            const container = document.getElementById('recentHistory');
+            
+            let html = '';
+            recentHistory.forEach(item => {
+                const statusClass = item.status === 'present' ? 'status-present' : 'status-missed';
+                const statusIcon = item.status === 'present' ? 'fa-check-circle' : 'fa-times-circle';
+                const statusColor = item.status === 'present' ? 'var(--success)' : 'var(--danger)';
+                
+                html += `
+                    <div class="history-item">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div class="history-status ${statusClass}"></div>
+                            <div>
+                                <div style="font-weight: 500;">${item.event}</div>
+                                <div style="font-size: 12px; color: var(--text-light);">
+                                    ${formatDisplayDate(item.date)}
+                                </div>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            ${item.time ? 
+                                `<span style="font-size: 12px; color: var(--text-light);">${item.time}</span>` : 
+                                `<span style="color: var(--danger); font-size: 12px;">Missed</span>`
+                            }
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Format Date
+        function formatDate(date) {
+            return date.toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
+        
+        function formatDisplayDate(dateStr) {
+            const date = new Date(dateStr);
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if(date.toDateString() === today.toDateString()) {
+                return 'Today';
+            } else if(date.toDateString() === yesterday.toDateString()) {
+                return 'Yesterday';
+            } else {
+                return formatDate(date);
+            }
+        }
+        
+        // Passkey Functions
+        function changePasskey() {
+            document.getElementById('changePasskeyModal').style.display = 'flex';
+        }
+        
+        function deletePasskey() {
+            document.getElementById('deletePasskeyModal').style.display = 'flex';
+        }
+        
+        function closeChangeModal() {
+            document.getElementById('changePasskeyModal').style.display = 'none';
+            // Clear inputs
+            document.getElementById('currentPasskey').value = '';
+            document.getElementById('newPasskey').value = '';
+            document.getElementById('confirmPasskey').value = '';
+        }
+        
+        function closeDeleteModal() {
+            document.getElementById('deletePasskeyModal').style.display = 'none';
+        }
+        
+        function confirmChangePasskey() {
+            const current = document.getElementById('currentPasskey').value;
+            const newPass = document.getElementById('newPasskey').value;
+            const confirm = document.getElementById('confirmPasskey').value;
+            
+            if(!current || !newPass || !confirm) {
+                showToast('All fields are required', 'error');
+                return;
+            }
+            
+            if(newPass.length < 4 || newPass.length > 6) {
+                showToast('Passkey must be 4-6 digits', 'error');
+                return;
+            }
+            
+            if(newPass !== confirm) {
+                showToast('New passkeys do not match', 'error');
+                return;
+            }
+            
+            // Simulate API call
+            showToast('Passkey updated successfully!', 'success');
+            closeChangeModal();
+        }
+        
+        function confirmDeletePasskey() {
+            // Simulate API call
+            showToast('Passkey deleted successfully', 'success');
+            closeDeleteModal();
+            
+            // Update UI
+            document.getElementById('passkeyStatus').textContent = 'Deleted';
+            document.getElementById('passkeyStatus').className = 'badge badge-danger';
+            document.getElementById('passkeyExpiry').textContent = 'No passkey set';
+        }
+        
+        // Share Functions
+        function copyLink() {
+            const link = document.getElementById('profileLink');
+            link.select();
+            document.execCommand('copy');
+            showToast('Profile link copied!', 'success');
+        }
+        
+        function shareWhatsApp() {
+            const text = `Check out my SAMS profile: ${document.getElementById('profileLink').value}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }
+        
+        function shareEmail() {
+            const subject = 'My SAMS Profile';
+            const body = `View my attendance profile: ${document.getElementById('profileLink').value}`;
+            window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+        
+        // Other Functions
+        function viewFullHistory() {
+            alert('Navigate to full history page');
+        }
+        
+        function editProfile() {
+            alert('Edit profile functionality');
+        }
+        
+        function changePassword() {
+            alert('Change password functionality');
+        }
+        
+        function deleteAccount() {
+            if(confirm('Are you sure you want to delete your account? This cannot be undone.')) {
+                alert('Account deletion requested');
+            }
+        }
+        
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMessage');
+            
+            toast.style.background = type === 'success' ? 'var(--success)' : 'var(--danger)';
+            toastMsg.textContent = message;
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+    
+    <!-- Core JS -->
+    <script src="../core/config.js"></script>
+    <script src="../core/auth.js"></script>
+</body>
+</html>
