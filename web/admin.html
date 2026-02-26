@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Admin Dashboard - SAMS</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Header -->
+        <div style="padding: var(--space-md); background: var(--bg-card); border-bottom: 1px solid var(--border);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2 style="font-size: 20px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-crown" style="color: var(--primary);"></i>
+                        Admin Dashboard
+                    </h2>
+                    <p style="color: var(--text-light); display: flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-user-shield"></i>
+                        <span id="adminName">XIBS Super Admin</span>
+                    </p>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <i class="fas fa-bell" style="font-size: 20px; color: var(--text-light);"></i>
+                    <i class="fas fa-download" style="font-size: 20px; color: var(--primary);" onclick="downloadFullJSON()"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Admin Tabs -->
+        <div style="display: flex; border-bottom: 1px solid var(--border); background: var(--bg-card); overflow-x: auto; white-space: nowrap;">
+            <button class="tab-btn active" onclick="switchTab('colleges')" style="padding: 12px 16px; border: none; background: none; color: var(--text); border-bottom: 3px solid var(--primary);">
+                <i class="fas fa-university"></i> Colleges
+            </button>
+            <button class="tab-btn" onclick="switchTab('courses')" style="padding: 12px 16px; border: none; background: none; color: var(--text-light);">
+                <i class="fas fa-book"></i> Courses
+            </button>
+            <button class="tab-btn" onclick="switchTab('users')" style="padding: 12px 16px; border: none; background: none; color: var(--text-light);">
+                <i class="fas fa-users"></i> Users
+            </button>
+            <button class="tab-btn" onclick="switchTab('crs')" style="padding: 12px 16px; border: none; background: none; color: var(--text-light);">
+                <i class="fas fa-chalkboard-teacher"></i> CRs
+            </button>
+            <button class="tab-btn" onclick="switchTab('admins')" style="padding: 12px 16px; border: none; background: none; color: var(--text-light);">
+                <i class="fas fa-user-shield"></i> Admins
+            </button>
+            <button class="tab-btn" onclick="switchTab('backup')" style="padding: 12px 16px; border: none; background: none; color: var(--text-light);">
+                <i class="fas fa-database"></i> Backup
+            </button>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content" style="padding-bottom: 80px;">
+            
+            <!-- Tab: Colleges -->
+            <div id="tab-colleges" class="tab-content">
+                <!-- Header with actions -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-university" style="color: var(--primary);"></i>
+                        Colleges Management
+                    </h3>
+                    <button class="btn btn-primary" onclick="addCollege()">
+                        <i class="fas fa-plus"></i> Add College
+                    </button>
+                </div>
+                
+                <!-- Search -->
+                <div class="search-box" style="margin-bottom: 16px;">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="form-input" id="collegeSearch" placeholder="Search colleges..." onkeyup="searchColleges()">
+                </div>
+                
+                <!-- Colleges List -->
+                <div id="collegesList" class="card" style="padding: 0;">
+                    <!-- Colleges loaded here -->
+                </div>
+            </div>
+            
+            <!-- Tab: Courses -->
+            <div id="tab-courses" class="tab-content" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-book" style="color: var(--primary);"></i>
+                        Courses Management
+                    </h3>
+                    <button class="btn btn-primary" onclick="addCourse()">
+                        <i class="fas fa-plus"></i> Add Course
+                    </button>
+                </div>
+                
+                <!-- College Filter -->
+                <div style="margin-bottom: 16px;">
+                    <select class="form-input" id="courseCollegeFilter" onchange="filterCourses()">
+                        <option value="">All Colleges</option>
+                    </select>
+                </div>
+                
+                <!-- Search -->
+                <div class="search-box" style="margin-bottom: 16px;">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="form-input" id="courseSearch" placeholder="Search courses..." onkeyup="searchCourses()">
+                </div>
+                
+                <!-- Courses List -->
+                <div id="coursesList" class="card" style="padding: 0;">
+                    <!-- Courses loaded here -->
+                </div>
+            </div>
+            
+            <!-- Tab: Users -->
+            <div id="tab-users" class="tab-content" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-users" style="color: var(--primary);"></i>
+                        Users Management
+                    </h3>
+                    <button class="btn btn-primary" onclick="addUser()">
+                        <i class="fas fa-user-plus"></i> Add User
+                    </button>
+                </div>
+                
+                <!-- Filters -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px;">
+                    <select class="form-input" id="userCollegeFilter" onchange="filterUsers()">
+                        <option value="">All Colleges</option>
+                    </select>
+                    <select class="form-input" id="userCourseFilter" onchange="filterUsers()">
+                        <option value="">All Courses</option>
+                    </select>
+                </div>
+                
+                <!-- Search -->
+                <div class="search-box" style="margin-bottom: 16px;">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="form-input" id="userSearch" placeholder="Search by name, reg, email..." onkeyup="searchUsers()">
+                </div>
+                
+                <!-- Users List -->
+                <div id="usersList" class="card" style="padding: 0; max-height: 500px; overflow-y: auto;">
+                    <!-- Users loaded here -->
+                </div>
+            </div>
+            
+            <!-- Tab: CRs -->
+            <div id="tab-crs" class="tab-content" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-chalkboard-teacher" style="color: var(--primary);"></i>
+                        Class Representatives
+                    </h3>
+                    <button class="btn btn-primary" onclick="assignCR()">
+                        <i class="fas fa-user-graduate"></i> Assign CR
+                    </button>
+                </div>
+                
+                <!-- Summary Cards -->
+                <div class="profile-stats" style="margin-bottom: 20px;">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalCRs">24</div>
+                        <div class="stat-label">Total CRs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="coursesWithCR">18</div>
+                        <div class="stat-label">Courses with CR</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avgCRsPerCourse">1.3</div>
+                        <div class="stat-label">Avg per Course</div>
+                    </div>
+                </div>
+                
+                <!-- CRs List -->
+                <div id="crsList" class="card" style="padding: 0;">
+                    <!-- CRs loaded here -->
+                </div>
+            </div>
+            
+            <!-- Tab: Admins -->
+            <div id="tab-admins" class="tab-content" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-user-shield" style="color: var(--primary);"></i>
+                        Administrators
+                    </h3>
+                    <button class="btn btn-primary" onclick="addAdmin()">
+                        <i class="fas fa-user-plus"></i> Add Admin
+                    </button>
+                </div>
+                
+                <!-- Admins List -->
+                <div id="adminsList" class="card" style="padding: 0;">
+                    <!-- Admins loaded here -->
+                </div>
+                
+                <!-- XIBS Info -->
+                <div class="card" style="margin-top: 20px; background: var(--bg-input);">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <i class="fas fa-crown" style="font-size: 24px; color: gold;"></i>
+                        <div>
+                            <div style="font-weight: 500;">XIBS Super Admin</div>
+                            <div style="font-size: 12px; color: var(--text-light);">Full system access • Cannot be removed</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab: Backup -->
+            <div id="tab-backup" class="tab-content" style="display: none;">
+                <h3 style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-database" style="color: var(--primary);"></i>
+                    JSON Backup Management
+                </h3>
+                
+                <!-- Backup Actions -->
+                <div class="card" style="margin-bottom: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <button class="btn btn-primary" onclick="downloadFullJSON()">
+                            <i class="fas fa-download"></i> Download Full JSON
+                        </button>
+                        <button class="btn btn-outline" onclick="createBackup()">
+                            <i class="fas fa-plus-circle"></i> Create Backup
+                        </button>
+                        <button class="btn btn-outline" onclick="restoreBackup()">
+                            <i class="fas fa-undo"></i> Restore Backup
+                        </button>
+                        <button class="btn btn-outline" onclick="scheduleBackup()">
+                            <i class="fas fa-clock"></i> Schedule
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Storage Stats -->
+                <div class="card" style="margin-bottom: 20px;">
+                    <h4 style="margin-bottom: 12px;">Storage Overview</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-light);">Total JSON Size</div>
+                            <div style="font-size: 24px; font-weight: 700;">156 MB</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-light);">Last Backup</div>
+                            <div style="font-size: 24px; font-weight: 700;">Today 2AM</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-light);">Backup Count</div>
+                            <div style="font-size: 24px; font-weight: 700;">24</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-light);">Next Backup</div>
+                            <div style="font-size: 24px; font-weight: 700;">Tomorrow 2AM</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Backups -->
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                        <h4>Recent Backups</h4>
+                        <span>Last 7 days</span>
+                    </div>
+                    
+                    <div id="backupList">
+                        <!-- Backups loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation (Admin has extra nav) -->
+        <nav class="bottom-nav">
+            <a href="home.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="offline.html" class="nav-item">
+                <i class="fas fa-wifi-slash"></i>
+                <span>Offline</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+            <a href="admin.html" class="nav-item active">
+                <i class="fas fa-cog"></i>
+                <span>Admin</span>
+            </a>
+        </nav>
+    </div>
+    
+    <!-- Add/Edit College Modal -->
+    <div id="collegeModal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-title" id="collegeModalTitle">Add College</div>
+            
+            <form id="collegeForm" onsubmit="event.preventDefault(); saveCollege()">
+                <input type="hidden" id="collegeId">
+                
+                <div class="form-group">
+                    <label class="form-label">College Name</label>
+                    <input type="text" class="form-input" id="collegeName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description (optional)</label>
+                    <textarea class="form-input" id="collegeDesc" rows="2"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Location</label>
+                    <input type="text" class="form-input" id="collegeLocation" placeholder="City/Area">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Contact Email</label>
+                    <input type="email" class="form-input" id="collegeEmail">
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeCollegeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Course Modal -->
+    <div id="courseModal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-title" id="courseModalTitle">Add Course</div>
+            
+            <form id="courseForm" onsubmit="event.preventDefault(); saveCourse()">
+                <input type="hidden" id="courseId">
+                
+                <div class="form-group">
+                    <label class="form-label">College</label>
+                    <select class="form-input" id="courseCollege" required>
+                        <option value="">Select College</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Course Name</label>
+                    <input type="text" class="form-input" id="courseName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Course Code</label>
+                    <input type="text" class="form-input" id="courseCode" placeholder="e.g., CS101" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input" id="courseDesc" rows="2"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Duration</label>
+                    <input type="text" class="form-input" id="courseDuration" placeholder="e.g., 3 years">
+                </div>
+                
+                <!-- CR Assignment (1-4) -->
+                <div style="margin: 16px 0;">
+                    <label class="form-label">Assign CRs (1-4)</label>
+                    <div id="crSelection">
+                        <!-- CR inputs will be added here -->
+                    </div>
+                    <button type="button" class="btn btn-outline" style="margin-top: 8px;" onclick="addCRField()">
+                        <i class="fas fa-plus"></i> Add Another CR
+                    </button>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeCourseModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Add User Modal -->
+    <div id="userModal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-title">Add User</div>
+            
+            <form onsubmit="event.preventDefault(); saveUser()">
+                <div class="form-group">
+                    <label class="form-label">College</label>
+                    <select class="form-input" id="userCollege" required>
+                        <option value="">Select College</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Course</label>
+                    <select class="form-input" id="userCourse" required>
+                        <option value="">Select Course</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" id="userName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Registration Number</label>
+                    <input type="text" class="form-input" id="userReg" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="userEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">WhatsApp Number</label>
+                    <input type="tel" class="form-input" id="userWA" placeholder="+255..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <select class="form-input" id="userRole">
+                        <option value="student">Student</option>
+                        <option value="cr">CR</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeUserModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Assign CR Modal -->
+    <div id="assignCRModal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-title">Assign CR to Course</div>
+            
+            <form onsubmit="event.preventDefault(); saveAssignment()">
+                <div class="form-group">
+                    <label class="form-label">College</label>
+                    <select class="form-input" id="assignCollege" onchange="loadCoursesForAssign()">
+                        <option value="">Select College</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Course</label>
+                    <select class="form-input" id="assignCourse" required>
+                        <option value="">Select Course</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">CR Name</label>
+                    <input type="text" class="form-input" id="assignCRName" placeholder="Search or enter name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">CR WhatsApp</label>
+                    <input type="tel" class="form-input" id="assignCRWA" placeholder="+255..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <select class="form-input" id="assignCRRole">
+                        <option value="main">Main CR</option>
+                        <option value="assistant">Assistant CR</option>
+                        <option value="assistant2">Assistant CR 2</option>
+                        <option value="assistant3">Assistant CR 3</option>
+                    </select>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeAssignModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Assign</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-title">
+                <i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i>
+                Confirm Delete
+            </div>
+            
+            <p id="deleteMessage" style="margin: 16px 0;">Are you sure you want to delete this item?</p>
+            
+            <div class="modal-actions">
+                <button class="btn btn-outline" style="flex: 1;" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" style="flex: 1;" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Backup Details Modal -->
+    <div id="backupModal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-title">Backup Details</div>
+            
+            <div style="margin: 16px 0;">
+                <div style="background: var(--bg-input); padding: 12px; border-radius: var(--radius); margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>File:</span>
+                        <span id="backupFileName">sams-backup-2026-02-26.zip</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Size:</span>
+                        <span id="backupFileSize">156 MB</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Created:</span>
+                        <span id="backupFileDate">2026-02-26 02:00 AM</span>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" style="flex: 1;" onclick="downloadBackup()">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                    <button class="btn btn-outline" style="flex: 1;" onclick="restoreThisBackup()">
+                        <i class="fas fa-undo"></i> Restore
+                    </button>
+                </div>
+            </div>
+            
+            <button class="btn btn-outline btn-block" onclick="closeBackupModal()">Close</button>
+        </div>
+    </div>
+    
+    <script>
+        // Mock Data
+        let mockColleges = [
+            { id: 'COL001', name: 'University of Dar es Salaam', courses: 12, students: 450, crs: 8 },
+            { id: 'COL002', name: 'University of Science Mbeya', courses: 8, students: 280, crs: 5 },
+            { id: 'COL003', name: 'Engineering Institute', courses: 15, students: 520, crs: 10 },
+            { id: 'COL004', name: 'Medical College', courses: 6, students: 320, crs: 4 }
+        ];
+        
+        let mockCourses = [
+            { id: 'CRS001', college: 'University of Science Mbeya', name: 'Computer Science', code: 'CS101', crs: ['John Smith', 'Jane Doe'], students: 45 },
+            { id: 'CRS002', college: 'University of Science Mbeya', name: 'Information Technology', code: 'IT202', crs: ['Sarah Johnson'], students: 38 },
+            { id: 'CRS003', college: 'University of Dar es Salaam', name: 'Software Engineering', code: 'SE303', crs: ['Dr. James'], students: 52 }
+        ];
+        
+        let mockUsers = [
+            { id: 'USR001', name: 'John Doe', reg: 'STU2024001', email: 'john@email.com', college: 'University of Science Mbeya', course: 'CS101', role: 'student', attendance: '93%' },
+            { id: 'USR002', name: 'Jane Smith', reg: 'STU2024002', email: 'jane@email.com', college: 'University of Science Mbeya', course: 'CS101', role: 'cr', attendance: '98%' },
+            { id: 'USR003', name: 'Bob Johnson', reg: 'STU2024003', email: 'bob@email.com', college: 'Engineering Institute', course: 'ENG101', role: 'student', attendance: '67%' }
+        ];
+        
+        let mockCRs = [
+            { id: 'CR001', name: 'John Smith', course: 'CS101', college: 'University of Science Mbeya', students: 45, role: 'main', wa: '+255123456789' },
+            { id: 'CR002', name: 'Jane Doe', course: 'CS101', college: 'University of Science Mbeya', students: 45, role: 'assistant', wa: '+255123456788' },
+            { id: 'CR003', name: 'Sarah Johnson', course: 'IT202', college: 'University of Science Mbeya', students: 38, role: 'main', wa: '+255123456787' }
+        ];
+        
+        let mockAdmins = [
+            { id: 'ADM001', name: 'XIBS', username: 'xibs', role: 'xibs', lastActive: 'Now' },
+            { id: 'ADM002', name: 'Admin User', username: 'admin1', role: 'admin', lastActive: '5m ago' }
+        ];
+        
+        let mockBackups = [
+            { name: 'sams-backup-2026-02-26-0200.zip', size: '156 MB', date: '2026-02-26 02:00' },
+            { name: 'sams-backup-2026-02-25-0200.zip', size: '152 MB', date: '2026-02-25 02:00' },
+            { name: 'sams-backup-2026-02-24-0200.zip', size: '148 MB', date: '2026-02-24 02:00' },
+            { name: 'sams-backup-2026-02-23-0200.zip', size: '145 MB', date: '2026-02-23 02:00' },
+            { name: 'sams-backup-2026-02-22-0200.zip', size: '142 MB', date: '2026-02-22 02:00' }
+        ];
+        
+        let currentDeleteType = null;
+        let currentDeleteId = null;
+        
+        // Initialize
+        window.onload = function() {
+            loadColleges();
+            loadCourses();
+            loadUsers();
+            loadCRs();
+            loadAdmins();
+            loadBackups();
+            populateCollegeFilters();
+            
+            // Set admin name
+            document.getElementById('adminName').textContent = 'XIBS Super Admin';
+        };
+        
+        // Tab Switching
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.style.color = 'var(--text-light)';
+                btn.style.borderBottom = 'none';
+            });
+            event.target.style.color = 'var(--text)';
+            event.target.style.borderBottom = '3px solid var(--primary)';
+            
+            // Show selected tab
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            document.getElementById(`tab-${tabName}`).style.display = 'block';
+        }
+        
+        // Colleges
+        function loadColleges() {
+            const container = document.getElementById('collegesList');
+            
+            let html = '';
+            mockColleges.forEach(college => {
+                html += `
+                    <div class="queue-item" style="padding: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600; font-size: 16px;">${college.name}</div>
+                                <div style="display: flex; gap: 16px; margin-top: 8px; font-size: 12px;">
+                                    <span><i class="fas fa-book"></i> ${college.courses} courses</span>
+                                    <span><i class="fas fa-users"></i> ${college.students} students</span>
+                                    <span><i class="fas fa-chalkboard-teacher"></i> ${college.crs} CRs</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-icon" onclick="editCollege('${college.id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-icon" style="color: var(--danger);" onclick="deleteItem('college', '${college.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function searchColleges() {
+            const search = document.getElementById('collegeSearch').value.toLowerCase();
+            // Filter and reload
+            loadColleges(); // In real app, filter the data
+        }
+        
+        function addCollege() {
+            document.getElementById('collegeModalTitle').textContent = 'Add College';
+            document.getElementById('collegeForm').reset();
+            document.getElementById('collegeId').value = '';
+            document.getElementById('collegeModal').style.display = 'flex';
+        }
+        
+        function editCollege(id) {
+            const college = mockColleges.find(c => c.id === id);
+            if(college) {
+                document.getElementById('collegeModalTitle').textContent = 'Edit College';
+                document.getElementById('collegeId').value = college.id;
+                document.getElementById('collegeName').value = college.name;
+                document.getElementById('collegeModal').style.display = 'flex';
+            }
+        }
+        
+        function saveCollege() {
+            // Save logic here
+            closeCollegeModal();
+            showToast('College saved successfully!', 'success');
+        }
+        
+        function closeCollegeModal() {
+            document.getElementById('collegeModal').style.display = 'none';
+        }
+        
+        // Courses
+        function loadCourses() {
+            const container = document.getElementById('coursesList');
+            
+            let html = '';
+            mockCourses.forEach(course => {
+                html += `
+                    <div class="queue-item" style="padding: 16px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div>
+                                <div style="font-weight: 600;">${course.name} (${course.code})</div>
+                                <div style="font-size: 12px; color: var(--text-light);">${course.college}</div>
+                                <div style="display: flex; gap: 16px; margin-top: 8px; font-size: 12px;">
+                                    <span><i class="fas fa-users"></i> ${course.students} students</span>
+                                    <span><i class="fas fa-chalkboard-teacher"></i> ${course.crs.length} CRs: ${course.crs.join(', ')}</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-icon" onclick="editCourse('${course.id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-icon" style="color: var(--danger);" onclick="deleteItem('course', '${course.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function addCourse() {
+            // Populate college dropdown
+            const select = document.getElementById('courseCollege');
+            select.innerHTML = '<option value="">Select College</option>';
+            mockColleges.forEach(college => {
+                select.innerHTML += `<option value="${college.id}">${college.name}</option>`;
+            });
+            
+            document.getElementById('courseModalTitle').textContent = 'Add Course';
+            document.getElementById('courseForm').reset();
+            document.getElementById('courseId').value = '';
+            document.getElementById('courseModal').style.display = 'flex';
+        }
+        
+        function editCourse(id) {
+            // Populate and edit
+            addCourse(); // Reuse
+            document.getElementById('courseModalTitle').textContent = 'Edit Course';
+        }
+        
+        function closeCourseModal() {
+            document.getElementById('courseModal').style.display = 'none';
+        }
+        
+        function saveCourse() {
+            closeCourseModal();
+            showToast('Course saved!', 'success');
+        }
+        
+        // Users
+        function loadUsers() {
+            const container = document.getElementById('usersList');
+            
+            let html = '';
+            mockUsers.forEach(user => {
+                html += `
+                    <div class="queue-item" style="padding: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 500;">${user.name}</div>
+                                <div style="font-size: 12px; color: var(--text-light);">
+                                    ${user.reg} • ${user.email}
+                                </div>
+                                <div style="font-size: 11px; margin-top: 4px;">
+                                    <span class="badge ${user.role === 'admin' ? 'badge-warning' : user.role === 'cr' ? 'badge-success' : ''}">
+                                        ${user.role}
+                                    </span>
+                                    <span style="margin-left: 8px;">${user.college} • ${user.course}</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-icon" onclick="editUser('${user.id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-icon" style="color: var(--danger);" onclick="deleteItem('user', '${user.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function addUser() {
+            // Populate colleges
+            const collegeSelect = document.getElementById('userCollege');
+            collegeSelect.innerHTML = '<option value="">Select College</option>';
+            mockColleges.forEach(college => {
+                collegeSelect.innerHTML += `<option value="${college.id}">${college.name}</option>`;
+            });
+            
+            document.getElementById('userModal').style.display = 'flex';
+        }
+        
+        function closeUserModal() {
+            document.getElementById('userModal').style.display = 'none';
+        }
+        
+        function saveUser() {
+            closeUserModal();
+            showToast('User added!', 'success');
+        }
+        
+        // CRs
+        function loadCRs() {
+            const container = document.getElementById('crsList');
+            
+            document.getElementById('totalCRs').textContent = mockCRs.length;
+            
+            let html = '';
+            mockCRs.forEach(cr => {
+                html += `
+                    <div class="queue-item" style="padding: 12px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div>
+                                <div style="font-weight: 500;">
+                                    ${cr.name}
+                                    ${cr.role === 'main' ? '<span class="badge badge-success">Main</span>' : '<span class="badge">Assistant</span>'}
+                                </div>
+                                <div style="font-size: 12px; color: var(--text-light);">
+                                    ${cr.course} • ${cr.college}
+                                </div>
+                                <div style="font-size: 11px;">
+                                    <i class="fab fa-whatsapp"></i> ${cr.wa} • ${cr.students} students
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-icon" onclick="editCR('${cr.id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-icon" style="color: var(--danger);" onclick="deleteItem('cr', '${cr.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function assignCR() {
+            // Populate colleges
+            const select = document.getElementById('assignCollege');
+            select.innerHTML = '<option value="">Select College</option>';
+            mockColleges.forEach(college => {
+                select.innerHTML += `<option value="${college.id}">${college.name}</option>`;
+            });
+            
+            document.getElementById('assignCRModal').style.display = 'flex';
+        }
+        
+        function loadCoursesForAssign() {
+            const collegeId = document.getElementById('assignCollege').value;
+            const courseSelect = document.getElementById('assignCourse');
+            
+            courseSelect.innerHTML = '<option value="">Select Course</option>';
+            if(collegeId) {
+                // Filter courses for this college
+                mockCourses.filter(c => c.college.includes('Science')).forEach(course => {
+                    courseSelect.innerHTML += `<option value="${course.id}">${course.name} (${course.code})</option>`;
+                });
+            }
+        }
+        
+        function closeAssignModal() {
+            document.getElementById('assignCRModal').style.display = 'none';
+        }
+        
+        function saveAssignment() {
+            closeAssignModal();
+            showToast('CR assigned successfully!', 'success');
+        }
+        
+        // Admins
+        function loadAdmins() {
+            const container = document.getElementById('adminsList');
+            
+            let html = '';
+            mockAdmins.forEach(admin => {
+                html += `
+                    <div class="queue-item" style="padding: 12px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div>
+                                <div style="font-weight: 500;">
+                                    ${admin.name}
+                                    ${admin.role === 'xibs' ? '<span class="badge badge-warning">XIBS</span>' : ''}
+                                </div>
+                                <div style="font-size: 12px;">@${admin.username}</div>
+                                <div style="font-size: 11px; color: var(--text-light);">Last active: ${admin.lastActive}</div>
+                            </div>
+                            <div>
+                                ${admin.role !== 'xibs' ? `
+                                    <button class="btn btn-icon" style="color: var(--danger);" onclick="deleteItem('admin', '${admin.id}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function addAdmin() {
+            showToast('Feature coming soon', 'info');
+        }
+        
+        // Backups
+        function loadBackups() {
+            const container = document.getElementById('backupList');
+            
+            let html = '';
+            mockBackups.forEach(backup => {
+                html += `
+                    <div class="queue-item" style="padding: 12px; cursor: pointer;" onclick="viewBackup('${backup.name}')">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div><i class="fas fa-file-archive"></i> ${backup.name}</div>
+                                <div style="font-size: 11px; color: var(--text-light);">${backup.size} • ${backup.date}</div>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function downloadFullJSON() {
+            showToast('Preparing full JSON backup...', 'info');
+            setTimeout(() => {
+                showToast('Download started!', 'success');
+            }, 2000);
+        }
+        
+        function createBackup() {
+            showToast('Creating backup...', 'info');
+            setTimeout(() => {
+                showToast('Backup created!', 'success');
+            }, 2000);
+        }
+        
+        function restoreBackup() {
+            showToast('Restore feature coming soon', 'info');
+        }
+        
+        function scheduleBackup() {
+            showToast('Schedule backup feature', 'info');
+        }
+        
+        function viewBackup(name) {
+            document.getElementById('backupFileName').textContent = name;
+            document.getElementById('backupFileSize').textContent = '156 MB';
+            document.getElementById('backupFileDate').textContent = '2026-02-26 02:00 AM';
+            document.getElementById('backupModal').style.display = 'flex';
+        }
+        
+        function downloadBackup() {
+            closeBackupModal();
+            showToast('Downloading backup...', 'success');
+        }
+        
+        function restoreThisBackup() {
+            if(confirm('Restore this backup? Current data will be overwritten.')) {
+                closeBackupModal();
+                showToast('Restore started...', 'info');
+            }
+        }
+        
+        function closeBackupModal() {
+            document.getElementById('backupModal').style.display = 'none';
+        }
+        
+        // Helper Functions
+        function populateCollegeFilters() {
+            const filters = ['userCollegeFilter', 'courseCollegeFilter'];
+            filters.forEach(filterId => {
+                const select = document.getElementById(filterId);
+                if(select) {
+                    select.innerHTML = '<option value="">All Colleges</option>';
+                    mockColleges.forEach(college => {
+                        select.innerHTML += `<option value="${college.id}">${college.name}</option>`;
+                    });
+                }
+            });
+        }
+        
+        // Delete functionality
+        function deleteItem(type, id) {
+            currentDeleteType = type;
+            currentDeleteId = id;
+            
+            let message = '';
+            switch(type) {
+                case 'college':
+                    message = 'Delete this college? All courses and users will be affected.';
+                    break;
+                case 'course':
+                    message = 'Delete this course? All students and attendance records will be removed.';
+                    break;
+                case 'user':
+                    message = 'Delete this user? This action cannot be undone.';
+                    break;
+                case 'cr':
+                    message = 'Remove this CR? The course will need a new CR.';
+                    break;
+                case 'admin':
+                    message = 'Remove this admin?';
+                    break;
+            }
+            
+            document.getElementById('deleteMessage').textContent = message;
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+        
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+            currentDeleteType = null;
+            currentDeleteId = null;
+        }
+        
+        function confirmDelete() {
+            closeDeleteModal();
+            showToast('Item deleted', 'success');
+            // In real app, remove from data and reload list
+        }
+        
+        // Toast
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed; bottom: 100px; left: 20px; right: 20px;
+                background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--danger)' : 'var(--warning)'};
+                color: white; padding: 12px; border-radius: 8px;
+                text-align: center; z-index: 3000; animation: fadeIn 0.3s;
+            `;
+            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i> ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        // Filter functions
+        function filterCourses() {}
+        function searchCourses() {}
+        function filterUsers() {}
+        function searchUsers() {}
+        
+        // Modal close on outside click
+        window.onclick = function(event) {
+            if(event.target.classList.contains('modal-overlay')) {
+                document.querySelectorAll('.modal-overlay').forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            }
+        };
+        
+        // Add CR field
+        function addCRField() {
+            const container = document.getElementById('crSelection');
+            const count = container.children.length;
+            
+            if(count >= 4) {
+                showToast('Maximum 4 CRs per course', 'warning');
+                return;
+            }
+            
+            const div = document.createElement('div');
+            div.style.marginBottom = '8px';
+            div.innerHTML = `
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" class="form-input" placeholder="CR Name" style="flex: 2;">
+                    <input type="tel" class="form-input" placeholder="WhatsApp" style="flex: 3;">
+                    <button type="button" class="btn btn-icon" onclick="this.parentElement.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+    </script>
+    
+    <!-- Core JS -->
+    <script src="../core/config.js"></script>
+    <script src="../core/auth.js"></script>
+</body>
+</html>
