@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>404 - Page Not Found | SAMS</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Main Content -->
+        <div class="main-content" style="display: flex; flex-direction: column; justify-content: center; min-height: 100vh;">
+            
+            <!-- Error Animation/Icon -->
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div style="font-size: 120px; color: var(--primary); opacity: 0.5;">
+                    <i class="fas fa-map-signs"></i>
+                </div>
+                
+                <div style="font-size: 72px; font-weight: 800; color: var(--primary); line-height: 1; margin-bottom: 16px;">
+                    404
+                </div>
+                
+                <h2 style="margin-bottom: 12px;">Page Not Found</h2>
+                
+                <p style="color: var(--text-light); max-width: 300px; margin: 0 auto;">
+                    The page you're looking for doesn't exist or has been moved.
+                </p>
+            </div>
+            
+            <!-- Quick Links -->
+            <div class="card" style="margin: 20px 0;">
+                <h3 style="margin-bottom: 16px; text-align: center;">Where would you like to go?</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <a href="home.html" class="btn btn-outline" style="padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none;">
+                        <i class="fas fa-home" style="font-size: 24px;"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a href="profile.html" class="btn btn-outline" style="padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none;">
+                        <i class="fas fa-user" style="font-size: 24px;"></i>
+                        <span>Profile</span>
+                    </a>
+                    
+                    <a href="offline.html" class="btn btn-outline" style="padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none;">
+                        <i class="fas fa-wifi-slash" style="font-size: 24px;"></i>
+                        <span>Offline</span>
+                    </a>
+                    
+                    <a href="settings.html" class="btn btn-outline" style="padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none;">
+                        <i class="fas fa-cog" style="font-size: 24px;"></i>
+                        <span>Settings</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Search Bar -->
+            <div class="card">
+                <h3 style="margin-bottom: 12px;">Search SAMS</h3>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" class="form-input" id="searchInput" placeholder="Search for pages..." style="flex: 1;">
+                    <button class="btn btn-primary" onclick="searchPages()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <!-- Quick Suggestions -->
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;">
+                    <span class="badge badge-success" style="padding: 8px; cursor: pointer;" onclick="quickSearch('home')">home</span>
+                    <span class="badge badge-success" style="padding: 8px; cursor: pointer;" onclick="quickSearch('login')">login</span>
+                    <span class="badge badge-success" style="padding: 8px; cursor: pointer;" onclick="quickSearch('profile')">profile</span>
+                    <span class="badge badge-success" style="padding: 8px; cursor: pointer;" onclick="quickSearch('settings')">settings</span>
+                    <span class="badge badge-success" style="padding: 8px; cursor: pointer;" onclick="quickSearch('offline')">offline</span>
+                    <span class="badge badge-success" style="padding: 8px; cursor: pointer;" onclick="quickSearch('cr')">cr dashboard</span>
+                </div>
+            </div>
+            
+            <!-- Error Details (Hidden for normal users, shown for debugging) -->
+            <details style="margin-top: 30px; padding: 16px; background: var(--bg-input); border-radius: var(--radius);">
+                <summary style="cursor: pointer; color: var(--text-light);">
+                    <i class="fas fa-bug"></i> Technical Details (Admins/CRs)
+                </summary>
+                <div style="margin-top: 12px; font-size: 12px; font-family: monospace; color: var(--text-light);">
+                    <div>Error: 404 Not Found</div>
+                    <div>Path: <span id="errorPath">/unknown-page</span></div>
+                    <div>Time: <span id="errorTime">2026-02-26 14:30:45</span></div>
+                    <div>User Agent: <span id="userAgent">loading...</span></div>
+                    <div>Online Status: <span id="onlineStatus">checking...</span></div>
+                </div>
+            </details>
+            
+            <!-- Report Problem -->
+            <div style="margin-top: 30px; text-align: center;">
+                <p style="color: var(--text-light); margin-bottom: 8px;">Think this is a mistake?</p>
+                <button class="btn btn-outline" onclick="reportProblem()">
+                    <i class="fas fa-flag"></i> Report Problem
+                </button>
+            </div>
+            
+            <!-- Go Back Button -->
+            <div style="margin-top: 30px;">
+                <button class="btn btn-primary btn-block" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i> Go Back
+                </button>
+            </div>
+            
+            <!-- Funny Message -->
+            <div style="margin-top: 40px; text-align: center; color: var(--text-lighter); font-size: 14px;">
+                <i class="fas fa-face-smile"></i> 
+                Looks like you're lost in the SAMS universe!
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Get current path
+        const path = window.location.pathname;
+        document.getElementById('errorPath').textContent = path;
+        
+        // Set time
+        document.getElementById('errorTime').textContent = new Date().toLocaleString('en-GB');
+        
+        // Get user agent
+        document.getElementById('userAgent').textContent = navigator.userAgent.substring(0, 50) + '...';
+        
+        // Check online status
+        document.getElementById('onlineStatus').textContent = navigator.onLine ? 'Online' : 'Offline';
+        
+        // Search function
+        function searchPages() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            if(!query) return;
+            
+            const pages = {
+                'home': 'home.html',
+                'login': 'index.html',
+                'register': 'register.html',
+                'profile': 'profile.html',
+                'settings': 'settings.html',
+                'offline': 'offline.html',
+                'cr': 'cr-dashboard.html',
+                'admin': 'admin.html',
+                'privacy': 'privacy.html'
+            };
+            
+            let found = false;
+            for(let [key, value] of Object.entries(pages)) {
+                if(query.includes(key) || key.includes(query)) {
+                    window.location.href = value;
+                    found = true;
+                    break;
+                }
+            }
+            
+            if(!found) {
+                showToast('No matching page found', 'error');
+            }
+        }
+        
+        function quickSearch(term) {
+            document.getElementById('searchInput').value = term;
+            searchPages();
+        }
+        
+        function goBack() {
+            if(document.referrer) {
+                window.location.href = document.referrer;
+            } else {
+                window.location.href = 'home.html';
+            }
+        }
+        
+        function reportProblem() {
+            const report = {
+                path: path,
+                time: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                online: navigator.onLine
+            };
+            
+            // Store in localStorage for support
+            localStorage.setItem('lastError', JSON.stringify(report));
+            
+            // Show message
+            showToast('Problem reported to support', 'success');
+            
+            // Redirect to support (could be WhatsApp)
+            setTimeout(() => {
+                window.location.href = 'https://wa.me/255123456789?text=I%20found%20a%20404%20error%20on%20' + encodeURIComponent(path);
+            }, 1500);
+        }
+        
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed; bottom: 30px; left: 20px; right: 20px;
+                background: ${type === 'success' ? 'var(--success)' : 'var(--danger)'};
+                color: white; padding: 12px; border-radius: 8px;
+                text-align: center; z-index: 2000; animation: slideUp 0.3s;
+            `;
+            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        // Random funny messages
+        const funnyMessages = [
+            "Lost in the matrix?",
+            "This page is on vacation!",
+            "404: Attendance not found",
+            "Maybe it's offline?",
+            "Did you try turning it off and on?",
+            "Even CR can't find this page"
+        ];
+        
+        // Set random funny subtitle
+        const subtitle = document.querySelector('.card + p');
+        if(subtitle) {
+            subtitle.textContent = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+        }
+    </script>
+</body>
+</html>
