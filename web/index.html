@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SAMS - Student Attendance System</title>
+    
+    <!-- Font Awesome Icons (No emojis) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- PWA Support -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2563eb">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Main Content -->
+        <div class="main-content fade-in">
+            
+            <!-- Logo & Brand -->
+            <div class="text-center" style="margin-top: 60px; margin-bottom: 40px;">
+                <div style="font-size: 48px; color: var(--primary); margin-bottom: 16px;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h1 style="font-size: 32px; margin-bottom: 8px;">SAMS</h1>
+                <p style="color: var(--text-light);">Student Attendance Management System</p>
+            </div>
+            
+            <!-- Login/Register Buttons -->
+            <div style="padding: 0 20px;">
+                <a href="login.html" class="btn btn-primary btn-block" style="margin-bottom: 16px;">
+                    <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>
+                    LOGIN
+                </a>
+                
+                <a href="register.html" class="btn btn-outline btn-block">
+                    <i class="fas fa-user-plus" style="margin-right: 8px;"></i>
+                    REGISTER
+                </a>
+            </div>
+            
+            <!-- Offline Mode Hint -->
+            <div style="margin-top: 40px; text-align: center;">
+                <div style="background: var(--bg-card); padding: 16px; border-radius: var(--radius); margin: 0 20px;">
+                    <i class="fas fa-wifi-slash" style="color: var(--warning); font-size: 20px; margin-right: 8px;"></i>
+                    <span style="color: var(--text-light);">Works offline with PWA</span>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div style="margin-top: 60px; text-align: center; color: var(--text-lighter); font-size: var(--text-sm);">
+                <p>© 2026 SAMS - v1.0</p>
+                <p style="margin-top: 8px;">
+                    <a href="#" style="color: var(--text-lighter); text-decoration: none;">Privacy</a> • 
+                    <a href="#" style="color: var(--text-lighter); text-decoration: none;">Help</a>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Dark Mode Toggle (Floating) -->
+        <div style="position: fixed; bottom: 80px; right: 20px; z-index: 99;">
+            <button class="btn btn-icon" onclick="toggleDarkMode()" style="width: 48px; height: 48px; border-radius: 50%; background: var(--bg-card);">
+                <i class="fas fa-moon" id="darkModeIcon"></i>
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const icon = document.getElementById('darkModeIcon');
+            if(document.body.classList.contains('dark-mode')) {
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        }
+        
+        // Check saved preference
+        if(localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('darkModeIcon').className = 'fas fa-sun';
+        }
+        
+        // Check if PWA can be installed
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            // Could show install button here
+        });
+    </script>
+    
+    <!-- Core JS -->
+    <script src="../core/config.js"></script>
+    <script src="../core/pwa.js"></script>
+</body>
+</html>
